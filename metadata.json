@@ -1,0 +1,62 @@
+{
+    "numeric_features": [
+        "moisture_pct",
+        "temp_c",
+        "days_since_water",
+        "humidity_pct"
+    ],
+    "categorical_features": [
+        "light"
+    ],
+    "cluster_features": [
+        "moisture_pct",
+        "temp_c",
+        "days_since_water",
+        "humidity_pct"
+    ],
+    "target": "needs_water",
+    "target_definition": "Set needs_water to 1 when simulated next morning moisture falls below 25 percent, otherwise 0. This is a teaching threshold from a generated recipe, not a recommended moisture threshold for every plant or soil.",
+    "numeric_ranges": {
+        "moisture_pct": [
+            10,
+            70
+        ],
+        "temp_c": [
+            18,
+            40
+        ],
+        "days_since_water": [
+            0,
+            5
+        ],
+        "humidity_pct": [
+            30,
+            85
+        ]
+    },
+    "category_values": {
+        "light": [
+            "partial_shade",
+            "shade",
+            "sunny"
+        ]
+    },
+    "image_classes": [
+        "angular_leaf_spot",
+        "bean_rust",
+        "healthy"
+    ],
+    "image_shape": [
+        96,
+        96,
+        3
+    ],
+    "versions": {
+        "python": "3.13.18",
+        "scikit-learn": "1.9.1",
+        "tensorflow": "2.21.0",
+        "nltk": "3.10.4",
+        "pandas": "3.0.5",
+        "numpy": "2.5.3"
+    }
+}

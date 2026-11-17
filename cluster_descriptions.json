@@ -1,0 +1,32 @@
+{
+    "0": {
+        "size": 225,
+        "averages": {
+            "moisture_pct": 41.33,
+            "temp_c": 28.83,
+            "days_since_water": 0.88,
+            "humidity_pct": 48.14
+        },
+        "description": "Recently watered, less humid (moisture_pct 41.33%, temp_c 28.83\u00b0C, days_since_water 0.88 days, humidity_pct 48.14%)"
+    },
+    "1": {
+        "size": 249,
+        "averages": {
+            "moisture_pct": 34.95,
+            "temp_c": 29.67,
+            "days_since_water": 2.61,
+            "humidity_pct": 74.34
+        },
+        "description": "More humid (moisture_pct 34.95%, temp_c 29.67\u00b0C, days_since_water 2.61 days, humidity_pct 74.34%)"
+    },
+    "2": {
+        "size": 226,
+        "averages": {
+            "moisture_pct": 44.61,
+            "temp_c": 28.56,
+            "days_since_water": 4.18,
+            "humidity_pct": 47.57
+        },
+        "description": "Longer since watering, less humid (moisture_pct 44.61%, temp_c 28.56\u00b0C, days_since_water 4.18 days, humidity_pct 47.57%)"
+    }
+}
