@@ -105,49 +105,57 @@ def load_image_model():
 @st.cache_resource
 def load_analyser():
    
+
+from pathlib import Path
+import zipfile
+import streamlit as st
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+
 @st.cache_resource
 def load_analyser():
-    from pathlib import Path
-    import zipfile
-
     base_dir = Path(__file__).resolve().parent
 
-    lexicon_zip = (
+    zip_path = (
         base_dir / "nltk_data" / "sentiment" / "vader_lexicon.zip"
     )
 
-    extract_dir = base_dir / ".nltk_data_extracted"
-    extract_dir.mkdir(parents=True, exist_ok=True)
+    extract_dir = (
+        base_dir / ".nltk_data_extracted" / "sentiment"
+    )
 
-    if not lexicon_zip.exists():
+    if not zip_path.is_file():
         st.error(
-            "VADER lexicon ZIP is missing: "
+            "VADER ZIP file is missing. Expected: "
             "nltk_data/sentiment/vader_lexicon.zip"
         )
         st.stop()
 
     try:
-        with zipfile.ZipFile(lexicon_zip, "r") as archive:
+        extract_dir.mkdir(parents=True, exist_ok=True)
+
+        with zipfile.ZipFile(zip_path, "r") as archive:
             archive.extractall(extract_dir)
 
-        matches = list(extract_dir.rglob("vader_lexicon.txt"))
+        lexicon_files = list(
+            extract_dir.rglob("vader_lexicon.txt")
+        )
 
-        if not matches:
+        if not lexicon_files:
             st.error(
-                "vader_lexicon.txt was not found inside the ZIP archive."
+                "VADER lexicon text file was not found inside the ZIP."
             )
             st.stop()
 
-        analyzer = SentimentIntensityAnalyzer(
-            lexicon_file=str(matches[0])
+        analyser = SentimentIntensityAnalyzer(
+            lexicon_file=str(lexicon_files[0])
         )
 
-        return analyzer
+        return analyser
 
     except Exception as exc:
-        st.error(f"VADER loading failed: {exc}")
+        st.error(f"Unable to initialize VADER: {exc}")
         st.stop()
-
 
 # ----------------------------------------------------------------- helpers
 def validate_record(record, meta):
