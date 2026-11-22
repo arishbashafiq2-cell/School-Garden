@@ -104,23 +104,49 @@ def load_image_model():
 
 @st.cache_resource
 def load_analyser():
-    """Uses the supplied VADER lexicon, so nothing is downloaded at startup."""
-    import nltk
-    from nltk.sentiment import SentimentIntensityAnalyzer
-    lexicon = find_lexicon()
-    if lexicon is None:
-        return None
-    if lexicon.suffix == ".zip":
-        nltk_root = lexicon.parent.parent
-    else:
-        # Only the .txt was uploaded: rebuild the standard NLTK layout in a temporary folder
-        import tempfile, zipfile
-        nltk_root = Path(tempfile.mkdtemp()) / "nltk_data"
-        (nltk_root / "sentiment").mkdir(parents=True)
-        with zipfile.ZipFile(nltk_root / "sentiment/vader_lexicon.zip", "w") as zf:
-            zf.write(lexicon, "vader_lexicon/vader_lexicon.txt")
-    nltk.data.path.insert(0, str(nltk_root))
-    return SentimentIntensityAnalyzer()
+   
+@st.cache_resource
+def load_analyser():
+    from pathlib import Path
+    import zipfile
+
+    base_dir = Path(__file__).resolve().parent
+
+    lexicon_zip = (
+        base_dir / "nltk_data" / "sentiment" / "vader_lexicon.zip"
+    )
+
+    extract_dir = base_dir / ".nltk_data_extracted"
+    extract_dir.mkdir(parents=True, exist_ok=True)
+
+    if not lexicon_zip.exists():
+        st.error(
+            "VADER lexicon ZIP is missing: "
+            "nltk_data/sentiment/vader_lexicon.zip"
+        )
+        st.stop()
+
+    try:
+        with zipfile.ZipFile(lexicon_zip, "r") as archive:
+            archive.extractall(extract_dir)
+
+        matches = list(extract_dir.rglob("vader_lexicon.txt"))
+
+        if not matches:
+            st.error(
+                "vader_lexicon.txt was not found inside the ZIP archive."
+            )
+            st.stop()
+
+        analyzer = SentimentIntensityAnalyzer(
+            lexicon_file=str(matches[0])
+        )
+
+        return analyzer
+
+    except Exception as exc:
+        st.error(f"VADER loading failed: {exc}")
+        st.stop()
 
 
 # ----------------------------------------------------------------- helpers
